@@ -85,110 +85,243 @@ Tests that validate boundary conditions and unusual scenarios.
 
 ---
 
-## Negative Scenarios
+## Comments Endpoint Tests
 
-### TC006: Get Post by Invalid ID (Negative)
-- **Test Case Name**: Get Post by Invalid ID Returns 404
-- **Description**: Verify that GET /posts/{invalid_id} returns 404
+### TC021: Get All Comments (Positive)
+- **Test Case Name**: Get All Comments Successfully
+- **Description**: Verify that GET /comments returns all comments with correct structure
 - **Precondition**: API is accessible
 - **Steps**:
-  1. Send GET request to /posts/999999
-  2. Verify response status code is 404
-- **Expected Result**:
-  - Status code: 404
-
-### TC007: Create Post with Missing Required Fields (Negative)
-- **Test Case Name**: Create Post with Missing Fields Returns 400
-- **Description**: Verify that POST /posts with missing fields returns error
-- **Precondition**: API is accessible
-- **Steps**:
-  1. Prepare post data missing title field
-  2. Send POST request to /posts with incomplete data
-  3. Verify response status code is 400
-- **Expected Result**:
-  - Status code: 400
-
-### TC008: Update Non-existent Post (Negative)
-- **Test Case Name**: Update Non-existent Post Returns 500
-- **Description**: Verify that PUT /posts/{non_existent_id} returns 500
-- **Precondition**: API is accessible
-- **Steps**:
-  1. Prepare post data
-  2. Send PUT request to /posts/999999 with data
-  3. Verify response status code is 500
-- **Expected Result**:
-  - Status code: 500
-
-### TC009: Delete Non-existent Post (Negative)
-- **Test Case Name**: Delete Non-existent Post Returns 200
-- **Description**: Verify that DELETE /posts/{non_existent_id} returns 200
-- **Precondition**: API is accessible
-- **Steps**:
-  1. Send DELETE request to /posts/999999
+  1. Send GET request to /comments
   2. Verify response status code is 200
+  3. Verify response contains array of comments
+  4. Verify each comment has required fields (id, postId, name, email, body)
+- **Expected Result**: 
+  - Status code: 200
+  - Response body contains array of comments
+  - Each comment has id, postId, name, email, body fields
+
+### TC022: Get Comment by Valid ID (Positive)
+- **Test Case Name**: Get Comment by Valid ID Successfully
+- **Description**: Verify that GET /comments/{id} returns specific comment
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /comments/1
+  2. Verify response status code is 200
+  3. Verify response contains comment with id=1
 - **Expected Result**:
   - Status code: 200
+  - Response contains comment with id=1
 
-### TC010: Invalid HTTP Method (Negative)
-- **Test Case Name**: Invalid HTTP Method Returns 200
-- **Description**: Verify that unsupported HTTP methods return 200
+### TC023: Create New Comment (Positive)
+- **Test Case Name**: Create New Comment Successfully
+- **Description**: Verify that POST /comments creates new comment
 - **Precondition**: API is accessible
 - **Steps**:
-  1. Send PATCH request to /posts/1
+  1. Prepare comment data with postId, name, email, body
+  2. Send POST request to /comments with data
+  3. Verify response status code is 201
+- **Expected Result**:
+  - Status code: 201
+  - Response contains created comment with generated id
+
+### TC024: Get Comments by Post ID (Positive)
+- **Test Case Name**: Get Comments by Post ID Successfully
+- **Description**: Verify that GET /comments?postId={id} returns comments for specific post
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /comments?postId=1
   2. Verify response status code is 200
+  3. Verify all returned comments have postId=1
 - **Expected Result**:
   - Status code: 200
+  - All comments have postId=1
 
 ---
 
-## Edge Cases
+## Albums Endpoint Tests
 
-### TC011: Large Payload (Edge Case)
-- **Test Case Name**: Handle Large Payload Successfully
-- **Description**: Verify that API handles large payloads
+### TC025: Get All Albums (Positive)
+- **Test Case Name**: Get All Albums Successfully
+- **Description**: Verify that GET /albums returns all albums with correct structure
 - **Precondition**: API is accessible
 - **Steps**:
-  1. Prepare post with very long title and body
-  2. Send POST request to /posts with large payload
+  1. Send GET request to /albums
+  2. Verify response status code is 200
+  3. Verify response contains array of albums
+  4. Verify each album has required fields (id, userId, title)
+- **Expected Result**: 
+  - Status code: 200
+  - Response body contains array of albums
+  - Each album has id, userId, title fields
+
+### TC026: Get Album by Valid ID (Positive)
+- **Test Case Name**: Get Album by Valid ID Successfully
+- **Description**: Verify that GET /albums/{id} returns specific album
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /albums/1
+  2. Verify response status code is 200
+  3. Verify response contains album with id=1
+- **Expected Result**:
+  - Status code: 200
+  - Response contains album with id=1
+
+### TC027: Create New Album (Positive)
+- **Test Case Name**: Create New Album Successfully
+- **Description**: Verify that POST /albums creates new album
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare album data with userId, title
+  2. Send POST request to /albums with data
   3. Verify response status code is 201
 - **Expected Result**:
   - Status code: 201
-  - Response contains created post
+  - Response contains created album with generated id
 
-### TC012: Boundary Values (Edge Case)
-- **Test Case Name**: Handle Boundary Values
-- **Description**: Verify that API handles boundary values correctly
+### TC028: Get Albums by User ID (Positive)
+- **Test Case Name**: Get Albums by User ID Successfully
+- **Description**: Verify that GET /albums?userId={id} returns albums for specific user
 - **Precondition**: API is accessible
 - **Steps**:
-  1. Send GET request to /posts/1 (first post)
-  2. Send GET request to /posts/100 (last post)
-  3. Verify both responses are successful
+  1. Send GET request to /albums?userId=1
+  2. Verify response status code is 200
+  3. Verify all returned albums have userId=1
 - **Expected Result**:
-  - Both requests return status code 200
-  - Responses contain valid post data
+  - Status code: 200
+  - All albums have userId=1
 
-### TC013: Special Characters (Edge Case)
-- **Test Case Name**: Handle Special Characters in Payload
-- **Description**: Verify that API handles special characters correctly
+---
+
+## Photos Endpoint Tests
+
+### TC029: Get All Photos (Positive)
+- **Test Case Name**: Get All Photos Successfully
+- **Description**: Verify that GET /photos returns all photos with correct structure
 - **Precondition**: API is accessible
 - **Steps**:
-  1. Prepare post with special characters in title and body
-  2. Send POST request to /posts with special characters
+  1. Send GET request to /photos
+  2. Verify response status code is 200
+  3. Verify response contains array of photos
+  4. Verify each photo has required fields (id, albumId, title, url, thumbnailUrl)
+- **Expected Result**: 
+  - Status code: 200
+  - Response body contains array of photos
+  - Each photo has id, albumId, title, url, thumbnailUrl fields
+
+### TC030: Get Photo by Valid ID (Positive)
+- **Test Case Name**: Get Photo by Valid ID Successfully
+- **Description**: Verify that GET /photos/{id} returns specific photo
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /photos/1
+  2. Verify response status code is 200
+  3. Verify response contains photo with id=1
+- **Expected Result**:
+  - Status code: 200
+  - Response contains photo with id=1
+
+### TC031: Create New Photo (Positive)
+- **Test Case Name**: Create New Photo Successfully
+- **Description**: Verify that POST /photos creates new photo
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare photo data with albumId, title, url, thumbnailUrl
+  2. Send POST request to /photos with data
   3. Verify response status code is 201
 - **Expected Result**:
   - Status code: 201
-  - Response contains created post with special characters preserved
+  - Response contains created photo with generated id
 
-### TC014: Empty Fields (Edge Case)
-- **Test Case Name**: Handle Empty Fields
-- **Description**: Verify that API handles empty fields correctly
+### TC032: Get Photos by Album ID (Positive)
+- **Test Case Name**: Get Photos by Album ID Successfully
+- **Description**: Verify that GET /photos?albumId={id} returns photos for specific album
 - **Precondition**: API is accessible
 - **Steps**:
-  1. Prepare post with empty title field
-  2. Send POST request to /posts with empty field
-  3. Verify response behavior
+  1. Send GET request to /photos?albumId=1
+  2. Verify response status code is 200
+  3. Verify all returned photos have albumId=1
 - **Expected Result**:
-  - Appropriate response (may be 201 or 400 depending on API behavior)
+  - Status code: 200
+  - All photos have albumId=1
+
+---
+
+## Todos Endpoint Tests
+
+### TC033: Get All Todos (Positive)
+- **Test Case Name**: Get All Todos Successfully
+- **Description**: Verify that GET /todos returns all todos with correct structure
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /todos
+  2. Verify response status code is 200
+  3. Verify response contains array of todos
+  4. Verify each todo has required fields (id, userId, title, completed)
+- **Expected Result**: 
+  - Status code: 200
+  - Response body contains array of todos
+  - Each todo has id, userId, title, completed fields
+
+### TC034: Get Todo by Valid ID (Positive)
+- **Test Case Name**: Get Todo by Valid ID Successfully
+- **Description**: Verify that GET /todos/{id} returns specific todo
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /todos/1
+  2. Verify response status code is 200
+  3. Verify response contains todo with id=1
+- **Expected Result**:
+  - Status code: 200
+  - Response contains todo with id=1
+
+### TC035: Create New Todo (Positive)
+- **Test Case Name**: Create New Todo Successfully
+- **Description**: Verify that POST /todos creates new todo
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare todo data with userId, title, completed
+  2. Send POST request to /todos with data
+  3. Verify response status code is 201
+- **Expected Result**:
+  - Status code: 201
+  - Response contains created todo with generated id
+
+### TC036: Get Todos by User ID (Positive)
+- **Test Case Name**: Get Todos by User ID Successfully
+- **Description**: Verify that GET /todos?userId={id} returns todos for specific user
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /todos?userId=1
+  2. Verify response status code is 200
+  3. Verify all returned todos have userId=1
+- **Expected Result**:
+  - Status code: 200
+  - All todos have userId=1
+
+### TC037: Get Completed Todos (Positive)
+- **Test Case Name**: Get Completed Todos Successfully
+- **Description**: Verify that GET /todos?completed=true returns only completed todos
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /todos?completed=true
+  2. Verify response status code is 200
+  3. Verify all returned todos have completed=true
+- **Expected Result**:
+  - Status code: 200
+  - All todos have completed=true
+
+### TC038: Get Incomplete Todos (Positive)
+- **Test Case Name**: Get Incomplete Todos Successfully
+- **Description**: Verify that GET /todos?completed=false returns only incomplete todos
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /todos?completed=false
+  2. Verify response status code is 200
+  3. Verify all returned todos have completed=false
+- **Expected Result**:
+  - Status code: 200
+  - All todos have completed=false
 
 ---
 
@@ -220,6 +353,113 @@ Tests that validate boundary conditions and unusual scenarios.
 
 ---
 
+## Negative Scenarios (Common across all endpoints)
+
+### TC006: Get Resource by Invalid ID (Negative)
+- **Test Case Name**: Get Resource by Invalid ID Returns 404
+- **Description**: Verify that GET /{resource}/999999 returns 404
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /{resource}/999999
+  2. Verify response status code is 404
+- **Expected Result**:
+  - Status code: 404
+
+### TC007: Create Resource with Missing Required Fields (Negative)
+- **Test Case Name**: Create Resource with Missing Fields Returns 400
+- **Description**: Verify that POST /{resource} with missing fields returns error
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare incomplete resource data
+  2. Send POST request to /{resource} with incomplete data
+  3. Verify response status code is 400
+- **Expected Result**:
+  - Status code: 400
+
+### TC008: Update Non-existent Resource (Negative)
+- **Test Case Name**: Update Non-existent Resource Returns 500
+- **Description**: Verify that PUT /{resource}/999999 returns 500
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare resource data
+  2. Send PUT request to /{resource}/999999 with data
+  3. Verify response status code is 500
+- **Expected Result**:
+  - Status code: 500
+
+### TC009: Delete Non-existent Resource (Negative)
+- **Test Case Name**: Delete Non-existent Resource Returns 200
+- **Description**: Verify that DELETE /{resource}/999999 returns 200
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send DELETE request to /{resource}/999999
+  2. Verify response status code is 200
+- **Expected Result**:
+  - Status code: 200
+
+### TC010: Invalid HTTP Method (Negative)
+- **Test Case Name**: Invalid HTTP Method Returns 200
+- **Description**: Verify that unsupported HTTP methods return 200
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send PATCH request to /{resource}/1
+  2. Verify response status code is 200
+- **Expected Result**:
+  - Status code: 200
+
+---
+
+## Edge Cases (Common across all endpoints)
+
+### TC011: Large Payload (Edge Case)
+- **Test Case Name**: Handle Large Payload Successfully
+- **Description**: Verify that API handles large payloads
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare resource with very long text fields
+  2. Send POST request to /{resource} with large payload
+  3. Verify response status code is 201
+- **Expected Result**:
+  - Status code: 201
+  - Response contains created resource
+
+### TC012: Boundary Values (Edge Case)
+- **Test Case Name**: Handle Boundary Values
+- **Description**: Verify that API handles boundary values correctly
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send GET request to /{resource}/1 (first resource)
+  2. Send GET request to /{resource}/last (last resource)
+  3. Verify both responses are successful
+- **Expected Result**:
+  - Both requests return status code 200
+  - Responses contain valid resource data
+
+### TC013: Special Characters (Edge Case)
+- **Test Case Name**: Handle Special Characters in Payload
+- **Description**: Verify that API handles special characters correctly
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare resource with special characters in text fields
+  2. Send POST request to /{resource} with special characters
+  3. Verify response status code is 201
+- **Expected Result**:
+  - Status code: 201
+  - Response contains created resource with special characters preserved
+
+### TC014: Empty Fields (Edge Case)
+- **Test Case Name**: Handle Empty Fields
+- **Description**: Verify that API handles empty fields correctly
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare resource with empty text fields
+  2. Send POST request to /{resource} with empty fields
+  3. Verify response behavior
+- **Expected Result**:
+  - Appropriate response (may be 201 or 400 depending on API behavior)
+
+---
+
 ## Data-Driven Tests
 
 ### TC017: Data-Driven Post Creation
@@ -246,6 +486,54 @@ Tests that validate boundary conditions and unusual scenarios.
   - All requests return status code 201
   - Each response contains created user
 
+### TC039: Data-Driven Comment Creation
+- **Test Case Name**: Create Multiple Comments with Test Data
+- **Description**: Verify that multiple comments can be created using external test data
+- **Precondition**: API is accessible, test data available
+- **Steps**:
+  1. Load test data from test-data/comments.json
+  2. For each test case, send POST request to /comments
+  3. Verify each response is successful
+- **Expected Result**:
+  - All requests return status code 201
+  - Each response contains created comment
+
+### TC040: Data-Driven Album Creation
+- **Test Case Name**: Create Multiple Albums with Test Data
+- **Description**: Verify that multiple albums can be created using external test data
+- **Precondition**: API is accessible, test data available
+- **Steps**:
+  1. Load test data from test-data/albums.json
+  2. For each test case, send POST request to /albums
+  3. Verify each response is successful
+- **Expected Result**:
+  - All requests return status code 201
+  - Each response contains created album
+
+### TC041: Data-Driven Photo Creation
+- **Test Case Name**: Create Multiple Photos with Test Data
+- **Description**: Verify that multiple photos can be created using external test data
+- **Precondition**: API is accessible, test data available
+- **Steps**:
+  1. Load test data from test-data/photos.json
+  2. For each test case, send POST request to /photos
+  3. Verify each response is successful
+- **Expected Result**:
+  - All requests return status code 201
+  - Each response contains created photo
+
+### TC042: Data-Driven Todo Creation
+- **Test Case Name**: Create Multiple Todos with Test Data
+- **Description**: Verify that multiple todos can be created using external test data
+- **Precondition**: API is accessible, test data available
+- **Steps**:
+  1. Load test data from test-data/todos.json
+  2. For each test case, send POST request to /todos
+  3. Verify each response is successful
+- **Expected Result**:
+  - All requests return status code 201
+  - Each response contains created todo
+
 ---
 
 ## Response Validation Tests
@@ -255,7 +543,7 @@ Tests that validate boundary conditions and unusual scenarios.
 - **Description**: Verify that API responses include correct headers
 - **Precondition**: API is accessible
 - **Steps**:
-  1. Send GET request to /posts
+  1. Send GET request to /{resource}
   2. Verify Content-Type header is application/json
   3. Verify other relevant headers are present
 - **Expected Result**:
@@ -267,9 +555,50 @@ Tests that validate boundary conditions and unusual scenarios.
 - **Description**: Verify that API responses match expected schema
 - **Precondition**: API is accessible
 - **Steps**:
-  1. Send GET request to /posts/1
+  1. Send GET request to /{resource}/1
   2. Verify response contains required fields
   3. Verify field types are correct
 - **Expected Result**:
   - Response contains all required fields
   - Field types match expected schema
+
+---
+
+## Resource-Specific Edge Cases
+
+### TC043: Photo URL Validation (Photos Endpoint)
+- **Test Case Name**: Handle Invalid URL Formats
+- **Description**: Verify that API handles invalid URL formats in photo endpoints
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare photo data with invalid URLs
+  2. Send POST request to /photos with invalid URLs
+  3. Verify response behavior
+- **Expected Result**:
+  - API accepts invalid URLs (JSONPlaceholder behavior)
+  - Response contains created photo with invalid URLs
+
+### TC044: Todo Boolean Validation (Todos Endpoint)
+- **Test Case Name**: Handle Boolean Edge Cases
+- **Description**: Verify that API handles boolean completed field correctly
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Create todo with completed: true
+  2. Create todo with completed: false
+  3. Verify both responses are successful
+- **Expected Result**:
+  - Both requests return status code 201
+  - Boolean values are preserved correctly
+
+---
+
+## Test Summary
+
+**Total Test Cases**: 44  
+**Resource Endpoints Covered**: 6 (Posts, Comments, Albums, Photos, Todos, Users)  
+**Test Categories**: Positive, Negative, Edge Cases, Data-Driven, Response Validation  
+**Data-Driven Tests**: 6 (one per resource)  
+**Query Parameter Tests**: 8 (filtering by various criteria)  
+**Schema Validation Tests**: 6 (one per resource)  
+**Error Handling Tests**: 5 (common across all resources)  
+**Edge Case Tests**: 6 (common across all resources) + 2 (resource-specific)

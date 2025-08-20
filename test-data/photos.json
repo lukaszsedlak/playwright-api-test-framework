@@ -1,0 +1,32 @@
+[
+  {
+    "albumId": 1,
+    "title": "Test Photo 1",
+    "url": "https://via.placeholder.com/600/92c952",
+    "thumbnailUrl": "https://via.placeholder.com/150/92c952"
+  },
+  {
+    "albumId": 2,
+    "title": "Test Photo 2 with Special Characters: !@#$%^&*()",
+    "url": "https://via.placeholder.com/600/771796",
+    "thumbnailUrl": "https://via.placeholder.com/150/771796"
+  },
+  {
+    "albumId": 3,
+    "title": "Test Photo 3 - Very Long Title That Tests How The API Handles Large Payloads And Multiple Words In A Single Title Field",
+    "url": "https://via.placeholder.com/600/24f355",
+    "thumbnailUrl": "https://via.placeholder.com/150/24f355"
+  },
+  {
+    "albumId": 1,
+    "title": "",
+    "url": "https://via.placeholder.com/600/d32776",
+    "thumbnailUrl": "https://via.placeholder.com/150/d32776"
+  },
+  {
+    "albumId": 100,
+    "title": "Test Photo 4 for Boundary Testing",
+    "url": "https://via.placeholder.com/600/f66b97",
+    "thumbnailUrl": "https://via.placeholder.com/150/f66b97"
+  }
+]

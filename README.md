@@ -72,10 +72,17 @@ npm run report
 playwright-api-test-framework/
 ├── tests/                          # Test files
 │   ├── posts.spec.ts              # Posts endpoint tests
-│   ├── users.spec.ts              # Users endpoint tests
-│   └── example.spec.ts            # Example test (can be removed)
+│   ├── comments.spec.ts           # Comments endpoint tests
+│   ├── albums.spec.ts             # Albums endpoint tests
+│   ├── photos.spec.ts             # Photos endpoint tests
+│   ├── todos.spec.ts              # Todos endpoint tests
+│   └── users.spec.ts              # Users endpoint tests
 ├── test-data/                      # External test data
 │   ├── posts.json                 # Test data for posts
+│   ├── comments.json              # Test data for comments
+│   ├── albums.json                # Test data for albums
+│   ├── photos.json                # Test data for photos
+│   ├── todos.json                 # Test data for todos
 │   └── users.json                 # Test data for users
 ├── docs/                          # Documentation
 │   └── test-cases.md              # Detailed test case documentation
@@ -93,6 +100,7 @@ playwright-api-test-framework/
 - ✅ POST requests (create new resources)
 - ✅ PUT requests (update existing resources)
 - ✅ DELETE requests (remove resources)
+- ✅ Query parameter filtering (by userId, postId, albumId, completed status)
 - ✅ Response validation (status codes, headers, schema)
 
 ### 2. Negative Scenarios
@@ -106,10 +114,13 @@ playwright-api-test-framework/
 - 🔄 Boundary values
 - 🔄 Special characters
 - 🔄 Empty fields
+- 🔄 Invalid URL formats (photos)
+- 🔄 Boolean edge cases (todos)
 
 ### 4. Data-Driven Tests
 - 📊 Multiple test scenarios using external JSON files
 - 📊 Scalable test data management
+- 📊 6 different resource types with unique data structures
 
 ## 📊 Test Data Structure
 
@@ -120,6 +131,51 @@ playwright-api-test-framework/
     "title": "Test Post Title",
     "body": "Test Post Body",
     "userId": 1
+  }
+]
+```
+
+### Comments Test Data (`test-data/comments.json`)
+```json
+[
+  {
+    "postId": 1,
+    "name": "Test Comment",
+    "email": "test@example.com",
+    "body": "This is a test comment"
+  }
+]
+```
+
+### Albums Test Data (`test-data/albums.json`)
+```json
+[
+  {
+    "userId": 1,
+    "title": "Test Album"
+  }
+]
+```
+
+### Photos Test Data (`test-data/photos.json`)
+```json
+[
+  {
+    "albumId": 1,
+    "title": "Test Photo",
+    "url": "https://via.placeholder.com/600/92c952",
+    "thumbnailUrl": "https://via.placeholder.com/150/92c952"
+  }
+]
+```
+
+### Todos Test Data (`test-data/todos.json`)
+```json
+[
+  {
+    "userId": 1,
+    "title": "Test Todo",
+    "completed": false
   }
 ]
 ```
@@ -221,6 +277,39 @@ Detailed test case documentation is available in [`docs/test-cases.md`](docs/tes
 - `POST /posts` - Create new post
 - `PUT /posts/{id}` - Update post
 - `DELETE /posts/{id}` - Delete post
+
+### Comments Endpoint (`/comments`)
+- `GET /comments` - Get all comments
+- `GET /comments/{id}` - Get comment by ID
+- `GET /comments?postId={id}` - Get comments by post ID
+- `POST /comments` - Create new comment
+- `PUT /comments/{id}` - Update comment
+- `DELETE /comments/{id}` - Delete comment
+
+### Albums Endpoint (`/albums`)
+- `GET /albums` - Get all albums
+- `GET /albums/{id}` - Get album by ID
+- `GET /albums?userId={id}` - Get albums by user ID
+- `POST /albums` - Create new album
+- `PUT /albums/{id}` - Update album
+- `DELETE /albums/{id}` - Delete album
+
+### Photos Endpoint (`/photos`)
+- `GET /photos` - Get all photos
+- `GET /photos/{id}` - Get photo by ID
+- `GET /photos?albumId={id}` - Get photos by album ID
+- `POST /photos` - Create new photo
+- `PUT /photos/{id}` - Update photo
+- `DELETE /photos/{id}` - Delete photo
+
+### Todos Endpoint (`/todos`)
+- `GET /todos` - Get all todos
+- `GET /todos/{id}` - Get todo by ID
+- `GET /todos?userId={id}` - Get todos by user ID
+- `GET /todos?completed={boolean}` - Get todos by completion status
+- `POST /todos` - Create new todo
+- `PUT /todos/{id}` - Update todo
+- `DELETE /todos/{id}` - Delete todo
 
 ### Users Endpoint (`/users`)
 - `GET /users` - Get all users

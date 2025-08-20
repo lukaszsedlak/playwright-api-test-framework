@@ -1,0 +1,32 @@
+[
+  {
+    "postId": 1,
+    "name": "Test Comment 1",
+    "email": "test1@example.com",
+    "body": "This is a test comment for post 1"
+  },
+  {
+    "postId": 2,
+    "name": "Test Comment 2",
+    "email": "test2@example.com",
+    "body": "This is a test comment for post 2 with special characters: !@#$%^&*()"
+  },
+  {
+    "postId": 3,
+    "name": "Test Comment 3 - Long Name",
+    "email": "test3@example.com",
+    "body": "This is a very long comment body that tests how the API handles larger payloads. It contains multiple sentences and should be properly handled by the JSONPlaceholder API."
+  },
+  {
+    "postId": 1,
+    "name": "",
+    "email": "empty@example.com",
+    "body": "Comment with empty name field"
+  },
+  {
+    "postId": 10,
+    "name": "Test Comment 4",
+    "email": "test4@example.com",
+    "body": "Comment for boundary testing"
+  }
+]
