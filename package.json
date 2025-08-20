@@ -1,0 +1,22 @@
+{
+  "name": "playwright-api-test-framework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukaszsedlak/playwright-api-test-framework.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lukaszsedlak/playwright-api-test-framework/issues"
+  },
+  "homepage": "https://github.com/lukaszsedlak/playwright-api-test-framework#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.0"
+  }
+}
