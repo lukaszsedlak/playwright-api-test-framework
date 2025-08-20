@@ -252,18 +252,6 @@ Detailed test case documentation is available in [`docs/test-cases.md`](docs/tes
 - The framework is designed to be easily adaptable for real APIs with proper validation
 - Test data can be easily modified in the `test-data/` directory
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Run the test suite
-6. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the ISC License.
 
 ## 📞 Support
 
