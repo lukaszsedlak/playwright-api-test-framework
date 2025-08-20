@@ -1,14 +1,21 @@
 {
   "name": "playwright-api-test-framework",
   "version": "1.0.0",
-  "description": "",
+  "description": "API automation framework using Playwright for testing JSONPlaceholder API",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lukaszsedlak/playwright-api-test-framework.git"
   },
-  "keywords": [],
+  "keywords": ["playwright", "api-testing", "automation", "jsonplaceholder"],
   "author": "",
   "license": "ISC",
   "bugs": {

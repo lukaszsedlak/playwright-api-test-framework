@@ -1,0 +1,69 @@
+image: node:18
+
+pipelines:
+  default:
+    - step:
+        name: API Tests
+        caches:
+          - node
+        script:
+          # Install dependencies
+          - npm ci
+          
+          # Run API tests
+          - npm test
+          
+          # Optional: Install browsers for UI testing
+          # - npm run install:browsers
+          
+        artifacts:
+          # Store test reports
+          - playwright-report/**
+          - test-results/**
+          
+        after-script:
+          # Display test summary
+          - echo "Test execution completed"
+          - echo "Check artifacts for detailed reports"
+          
+  branches:
+    develop:
+      - step:
+          name: API Tests (Develop)
+          caches:
+            - node
+          script:
+            - npm ci
+            - npm test
+          artifacts:
+            - playwright-report/**
+            - test-results/**
+            
+    feature/*:
+      - step:
+          name: API Tests (Feature)
+          caches:
+            - node
+          script:
+            - npm ci
+            - npm test
+          artifacts:
+            - playwright-report/**
+            - test-results/**
+            
+  pull-requests:
+    '**':
+      - step:
+          name: API Tests (PR)
+          caches:
+            - node
+          script:
+            - npm ci
+            - npm test
+          artifacts:
+            - playwright-report/**
+            - test-results/**
+
+definitions:
+  caches:
+    node: node_modules

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "John Doe",
+    "username": "johndoe",
+    "email": "john.doe@example.com",
+    "phone": "1-770-736-8031 x56442",
+    "website": "hildegard.org"
+  },
+  {
+    "name": "Jane Smith",
+    "username": "janesmith",
+    "email": "jane.smith@example.com",
+    "phone": "1-463-123-4447",
+    "website": "ramiro.info"
+  },
+  {
+    "name": "Bob Johnson",
+    "username": "bobjohnson",
+    "email": "bob.johnson@example.com",
+    "phone": "1-477-935-8478 x6430",
+    "website": "ola.org"
+  }
+]

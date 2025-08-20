@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Test Post 1",
+    "body": "This is the body of test post 1",
+    "userId": 1
+  },
+  {
+    "title": "Test Post 2",
+    "body": "This is the body of test post 2 with special characters: !@#$%^&*()",
+    "userId": 2
+  },
+  {
+    "title": "Test Post 3 - Long Title",
+    "body": "This is a very long body text that tests how the API handles larger payloads. It contains multiple sentences and should be properly handled by the JSONPlaceholder API.",
+    "userId": 3
+  },
+  {
+    "title": "Test Post 4",
+    "body": "This post tests boundary conditions",
+    "userId": 10
+  },
+  {
+    "title": "",
+    "body": "Post with empty title",
+    "userId": 1
+  }
+]
