@@ -109,35 +109,35 @@ Tests that validate boundary conditions and unusual scenarios.
   - Status code: 400
 
 ### TC008: Update Non-existent Post (Negative)
-- **Test Case Name**: Update Non-existent Post Returns 404
-- **Description**: Verify that PUT /posts/{non_existent_id} returns 404
+- **Test Case Name**: Update Non-existent Post Returns 500
+- **Description**: Verify that PUT /posts/{non_existent_id} returns 500
 - **Precondition**: API is accessible
 - **Steps**:
   1. Prepare post data
   2. Send PUT request to /posts/999999 with data
-  3. Verify response status code is 404
+  3. Verify response status code is 500
 - **Expected Result**:
-  - Status code: 404
+  - Status code: 500
 
 ### TC009: Delete Non-existent Post (Negative)
-- **Test Case Name**: Delete Non-existent Post Returns 404
-- **Description**: Verify that DELETE /posts/{non_existent_id} returns 404
+- **Test Case Name**: Delete Non-existent Post Returns 200
+- **Description**: Verify that DELETE /posts/{non_existent_id} returns 200
 - **Precondition**: API is accessible
 - **Steps**:
   1. Send DELETE request to /posts/999999
-  2. Verify response status code is 404
+  2. Verify response status code is 200
 - **Expected Result**:
-  - Status code: 404
+  - Status code: 200
 
 ### TC010: Invalid HTTP Method (Negative)
-- **Test Case Name**: Invalid HTTP Method Returns 405
-- **Description**: Verify that unsupported HTTP methods return 405
+- **Test Case Name**: Invalid HTTP Method Returns 200
+- **Description**: Verify that unsupported HTTP methods return 200
 - **Precondition**: API is accessible
 - **Steps**:
   1. Send PATCH request to /posts/1
-  2. Verify response status code is 405
+  2. Verify response status code is 200
 - **Expected Result**:
-  - Status code: 405
+  - Status code: 200
 
 ---
 

@@ -242,6 +242,10 @@ Detailed test case documentation is available in [`docs/test-cases.md`](docs/tes
 2. **Limited Validation**: The mock API doesn't validate required fields strictly
 3. **No Rate Limiting**: The mock API doesn't implement rate limiting
 4. **Fixed Data**: The API returns predefined data, not dynamic responses
+5. **Non-Standard Error Responses**: Some error scenarios return different status codes than expected:
+   - PUT requests to non-existent resources return 500 instead of 404
+   - DELETE requests to non-existent resources return 200 instead of 404
+   - Unsupported HTTP methods (like PATCH) return 200 instead of 405
 
 ### Notes
 - Some negative test cases may behave differently with the mock API compared to real APIs
