@@ -1,288 +1,481 @@
 import { test, expect } from '@playwright/test';
+import { ApiAssertions } from '../utils/assertions';
+import { ApiHelpers, TestDataGenerators } from '../utils/api-helpers';
+import { Comment, CreateCommentRequest, UpdateCommentRequest } from '../types/api-types';
 import commentsData from '../test-data/comments.json';
 
 test.describe('Comments API Tests', () => {
-  test.describe('Positive Scenarios', () => {
+  let sampleComment: Comment;
+  let testCommentData: CreateCommentRequest;
+
+  test.beforeAll(async ({ request }) => {
+    // Fetch a sample comment for reuse in tests
+    const response = await request.get('/comments/1');
+    sampleComment = await response.json();
+    
+    // Initialize test data
+    testCommentData = TestDataGenerators.createTestComment();
+  });
+
+  test.beforeEach(async () => {
+    // Reset test data for each test
+    testCommentData = TestDataGenerators.createTestComment();
+  });
+
+  test.describe('GET Operations', () => {
     test('Get all comments successfully', async ({ request }) => {
-      const response = await request.get('/comments');
-      
-      expect(response.status()).toBe(200);
-      const comments = await response.json();
-      
-      expect(Array.isArray(comments)).toBe(true);
-      expect(comments.length).toBeGreaterThan(0);
-      
-      // Verify each comment has required fields
-      for (const comment of comments) {
-        expect(comment).toHaveProperty('id');
-        expect(comment).toHaveProperty('postId');
-        expect(comment).toHaveProperty('name');
-        expect(comment).toHaveProperty('email');
-        expect(comment).toHaveProperty('body');
-        expect(typeof comment.id).toBe('number');
-        expect(typeof comment.postId).toBe('number');
-        expect(typeof comment.name).toBe('string');
-        expect(typeof comment.email).toBe('string');
-        expect(typeof comment.body).toBe('string');
-      }
+      await test.step('Send GET request to /comments endpoint', async () => {
+        const response = await request.get('/comments');
+        
+        await test.step('Verify response status and content type', async () => {
+          await ApiAssertions.assertStatus(response, 200);
+          await ApiAssertions.assertJsonContentType(response);
+        });
+        
+        await test.step('Verify response is a valid array with base resource fields', async () => {
+          await ApiAssertions.assertJsonArray(response);
+          await ApiAssertions.assertBaseResourceArray(response);
+        });
+        
+        await test.step('Verify comment schema matches expected structure', async () => {
+          await ApiAssertions.assertSchema<Comment>(response, {
+            id: 'number',
+            postId: 'number',
+            name: 'string',
+            email: 'string',
+            body: 'string'
+          });
+        });
+      });
     });
 
     test('Get comment by valid ID successfully', async ({ request }) => {
-      const response = await request.get('/comments/1');
-      
-      expect(response.status()).toBe(200);
-      const comment = await response.json();
-      
-      expect(comment.id).toBe(1);
-      expect(comment).toHaveProperty('postId');
-      expect(comment).toHaveProperty('name');
-      expect(comment).toHaveProperty('email');
-      expect(comment).toHaveProperty('body');
-    });
-
-    test('Create new comment successfully', async ({ request }) => {
-      const newComment = {
-        postId: 1,
-        name: 'Test Comment',
-        email: 'test@example.com',
-        body: 'This is a test comment'
-      };
-
-      const response = await request.post('/comments', {
-        data: newComment
+      await test.step('Send GET request to /comments/1 endpoint', async () => {
+        const response = await request.get('/comments/1');
+        
+        await test.step('Verify response status and content type', async () => {
+          await ApiAssertions.assertStatus(response, 200);
+          await ApiAssertions.assertJsonContentType(response);
+        });
+        
+        await test.step('Verify response is a valid object with base resource fields', async () => {
+          await ApiAssertions.assertJsonObject(response);
+          await ApiAssertions.assertBaseResourceFields(response);
+        });
+        
+        await test.step('Verify specific comment data', async () => {
+          const comment = await response.json();
+          expect(comment.id).toBe(1);
+          expect(comment).toHaveProperty('postId');
+          expect(comment).toHaveProperty('name');
+          expect(comment).toHaveProperty('email');
+          expect(comment).toHaveProperty('body');
+        });
       });
-      
-      expect(response.status()).toBe(201);
-      const createdComment = await response.json();
-      
-      expect(createdComment).toHaveProperty('id');
-      expect(createdComment.postId).toBe(newComment.postId);
-      expect(createdComment.name).toBe(newComment.name);
-      expect(createdComment.email).toBe(newComment.email);
-      expect(createdComment.body).toBe(newComment.body);
-    });
-
-    test('Update comment successfully', async ({ request }) => {
-      const updatedComment = {
-        id: 1,
-        postId: 1,
-        name: 'Updated Comment',
-        email: 'updated@example.com',
-        body: 'This is an updated comment'
-      };
-
-      const response = await request.put('/comments/1', {
-        data: updatedComment
-      });
-      
-      expect(response.status()).toBe(200);
-      const comment = await response.json();
-      
-      expect(comment.id).toBe(updatedComment.id);
-      expect(comment.postId).toBe(updatedComment.postId);
-      expect(comment.name).toBe(updatedComment.name);
-      expect(comment.email).toBe(updatedComment.email);
-      expect(comment.body).toBe(updatedComment.body);
-    });
-
-    test('Delete comment successfully', async ({ request }) => {
-      const response = await request.delete('/comments/1');
-      
-      expect(response.status()).toBe(200);
     });
 
     test('Get comments by post ID', async ({ request }) => {
-      const response = await request.get('/comments?postId=1');
-      
-      expect(response.status()).toBe(200);
-      const comments = await response.json();
-      
-      expect(Array.isArray(comments)).toBe(true);
-      for (const comment of comments) {
-        expect(comment.postId).toBe(1);
-      }
+      await test.step('Send GET request to /comments?postId=1 endpoint', async () => {
+        const response = await request.get('/comments?postId=1');
+        
+        await test.step('Verify response status and content type', async () => {
+          await ApiAssertions.assertStatus(response, 200);
+          await ApiAssertions.assertJsonContentType(response);
+        });
+        
+        await test.step('Verify response is filtered array', async () => {
+          await ApiAssertions.assertJsonArray(response);
+          await ApiAssertions.assertArrayFilteredByField(response, 'postId', 1);
+        });
+      });
+    });
+  });
+
+  test.describe('POST Operations', () => {
+    test('Create new comment successfully', async ({ request }) => {
+      await test.step('Send POST request to create new comment', async () => {
+        const response = await request.post('/comments', {
+          data: testCommentData
+        });
+        
+        await test.step('Verify comment was created successfully', async () => {
+          await ApiAssertions.assertCreatedResource<Comment>(response, testCommentData);
+        });
+      });
+    });
+
+    test('Create comment with large payload', async ({ request }) => {
+      await test.step('Prepare large payload test data', async () => {
+        const largeCommentData = TestDataGenerators.createTestComment({
+          name: TestDataGenerators.createLargePayload(1000),
+          body: TestDataGenerators.createLargePayload(5000)
+        });
+
+        await test.step('Send POST request with large payload', async () => {
+          const response = await request.post('/comments', {
+            data: largeCommentData
+          });
+          
+          await test.step('Verify large payload comment was created successfully', async () => {
+            await ApiAssertions.assertCreatedResource<Comment>(response, largeCommentData);
+          });
+        });
+      });
+    });
+
+    test('Create comment with special characters', async ({ request }) => {
+      await test.step('Prepare special characters test data', async () => {
+        const specialCommentData = TestDataGenerators.createTestComment({
+          name: TestDataGenerators.createSpecialCharacters(),
+          body: TestDataGenerators.createSpecialCharacters()
+        });
+
+        await test.step('Send POST request with special characters', async () => {
+          const response = await request.post('/comments', {
+            data: specialCommentData
+          });
+          
+          await test.step('Verify special characters comment was created successfully', async () => {
+            await ApiAssertions.assertCreatedResource<Comment>(response, specialCommentData);
+          });
+        });
+      });
+    });
+
+    test('Create comment with empty fields', async ({ request }) => {
+      await test.step('Prepare empty fields test data', async () => {
+        const emptyFieldCommentData = TestDataGenerators.createTestComment({
+          name: '',
+          body: 'Comment with empty name'
+        });
+
+        await test.step('Send POST request with empty fields', async () => {
+          const response = await request.post('/comments', {
+            data: emptyFieldCommentData
+          });
+          
+          await test.step('Verify empty fields comment was created successfully', async () => {
+            await ApiAssertions.assertCreatedResource<Comment>(response, emptyFieldCommentData);
+          });
+        });
+      });
+    });
+  });
+
+  test.describe('PUT Operations', () => {
+    test('Update comment successfully', async ({ request }) => {
+      await test.step('Prepare update data for existing comment', async () => {
+        const updatedCommentData: UpdateCommentRequest = {
+          id: 1,
+          postId: 1,
+          name: 'Updated Comment',
+          email: 'updated@example.com',
+          body: 'This is an updated comment'
+        };
+
+        await test.step('Send PUT request to update comment', async () => {
+          const response = await request.put('/comments/1', {
+            data: updatedCommentData
+          });
+          
+          await test.step('Verify comment was updated successfully', async () => {
+            await ApiAssertions.assertUpdatedResource<Comment>(response, updatedCommentData);
+          });
+        });
+      });
+    });
+
+    test('Update comment with large payload', async ({ request }) => {
+      await test.step('Prepare large payload update data', async () => {
+        const largeUpdatedCommentData: UpdateCommentRequest = {
+          id: 1,
+          postId: 1,
+          name: TestDataGenerators.createLargePayload(1000),
+          email: 'large@example.com',
+          body: TestDataGenerators.createLargePayload(5000)
+        };
+
+        await test.step('Send PUT request with large payload', async () => {
+          const response = await request.put('/comments/1', {
+            data: largeUpdatedCommentData
+          });
+          
+          await test.step('Verify large payload comment was updated successfully', async () => {
+            await ApiAssertions.assertUpdatedResource<Comment>(response, largeUpdatedCommentData);
+          });
+        });
+      });
+    });
+  });
+
+  test.describe('DELETE Operations', () => {
+    test('Delete comment successfully', async ({ request }) => {
+      await test.step('Send DELETE request to remove comment', async () => {
+        const response = await request.delete('/comments/1');
+        
+        await test.step('Verify comment was deleted successfully', async () => {
+          await ApiAssertions.assertDeleted(response);
+        });
+      });
     });
   });
 
   test.describe('Negative Scenarios', () => {
     test('Get comment by invalid ID returns 404', async ({ request }) => {
-      const response = await request.get('/comments/999999');
-      
-      expect(response.status()).toBe(404);
+      await test.step('Send GET request with invalid comment ID', async () => {
+        const response = await request.get('/comments/999999');
+        
+        await test.step('Verify 404 Not Found response', async () => {
+          await ApiAssertions.assertNotFound(response);
+        });
+      });
     });
 
     test('Create comment with missing required fields', async ({ request }) => {
-      const incompleteComment = {
-        postId: 1,
-        email: 'test@example.com'
-        // Missing name and body fields
-      };
+      await test.step('Prepare incomplete comment data (missing name and body)', async () => {
+        const incompleteCommentData = {
+          postId: 1,
+          email: 'test@example.com'
+          // Missing name and body fields
+        };
 
-      const response = await request.post('/comments', {
-        data: incompleteComment
+        await test.step('Send POST request with incomplete data', async () => {
+          const response = await request.post('/comments', {
+            data: incompleteCommentData
+          });
+          
+          await test.step('Verify response (JSONPlaceholder accepts incomplete data)', async () => {
+            // JSONPlaceholder doesn't validate required fields strictly
+            expect([200, 201, 400]).toContain(response.status());
+          });
+        });
       });
-      
-      // JSONPlaceholder doesn't validate required fields strictly
-      expect([200, 201, 400]).toContain(response.status());
     });
 
     test('Update non-existent comment returns 500', async ({ request }) => {
-      const updatedComment = {
-        id: 999999,
-        postId: 1,
-        name: 'Updated Comment',
-        email: 'updated@example.com',
-        body: 'This is an updated comment'
-      };
+      await test.step('Prepare update data for non-existent comment', async () => {
+        const updatedCommentData: UpdateCommentRequest = {
+          id: 999999,
+          postId: 1,
+          name: 'Updated Comment',
+          email: 'updated@example.com',
+          body: 'This is an updated comment'
+        };
 
-      const response = await request.put('/comments/999999', {
-        data: updatedComment
+        await test.step('Send PUT request to non-existent comment', async () => {
+          const response = await request.put('/comments/999999', {
+            data: updatedCommentData
+          });
+          
+          await test.step('Verify 500 Server Error response', async () => {
+            await ApiAssertions.assertServerError(response);
+          });
+        });
       });
-      
-      // JSONPlaceholder returns 500 for non-existent resources on PUT
-      expect(response.status()).toBe(500);
     });
 
     test('Delete non-existent comment returns 200', async ({ request }) => {
-      const response = await request.delete('/comments/999999');
-      
-      // JSONPlaceholder returns 200 for DELETE operations even for non-existent resources
-      expect(response.status()).toBe(200);
+      await test.step('Send DELETE request to non-existent comment', async () => {
+        const response = await request.delete('/comments/999999');
+        
+        await test.step('Verify 200 response (JSONPlaceholder behavior)', async () => {
+          await ApiAssertions.assertDeleted(response);
+        });
+      });
     });
   });
 
   test.describe('Edge Cases', () => {
     test('Handle large payload successfully', async ({ request }) => {
-      const largeName = 'A'.repeat(1000);
-      const largeBody = 'B'.repeat(5000);
-      
-      const largeComment = {
-        postId: 1,
-        name: largeName,
-        email: 'large@example.com',
-        body: largeBody
-      };
+      await test.step('Prepare large payload test data', async () => {
+        const largeName = TestDataGenerators.createLargePayload(1000);
+        const largeBody = TestDataGenerators.createLargePayload(5000);
+        
+        const largeCommentData = TestDataGenerators.createTestComment({
+          name: largeName,
+          body: largeBody
+        });
 
-      const response = await request.post('/comments', {
-        data: largeComment
+        await test.step('Send POST request with large payload', async () => {
+          const response = await request.post('/comments', {
+            data: largeCommentData
+          });
+          
+          await test.step('Verify large payload was handled successfully', async () => {
+            await ApiAssertions.assertCreatedResource<Comment>(response, largeCommentData);
+          });
+        });
       });
-      
-      expect(response.status()).toBe(201);
-      const createdComment = await response.json();
-      
-      expect(createdComment.name).toBe(largeName);
-      expect(createdComment.body).toBe(largeBody);
     });
 
     test('Handle boundary values', async ({ request }) => {
-      // Test first comment
-      const firstResponse = await request.get('/comments/1');
-      expect(firstResponse.status()).toBe(200);
+      await test.step('Test first comment (boundary: ID=1)', async () => {
+        const firstResponse = await request.get('/comments/1');
+        await ApiAssertions.assertStatus(firstResponse, 200);
+        
+        const firstComment = await firstResponse.json();
+        expect(firstComment.id).toBe(1);
+      });
       
-      // Test last comment (assuming 500 comments exist)
-      const lastResponse = await request.get('/comments/500');
-      expect(lastResponse.status()).toBe(200);
-      
-      const firstComment = await firstResponse.json();
-      const lastComment = await lastResponse.json();
-      
-      expect(firstComment.id).toBe(1);
-      expect(lastComment.id).toBe(500);
+      await test.step('Test last comment (boundary: ID=500)', async () => {
+        const lastResponse = await request.get('/comments/500');
+        await ApiAssertions.assertStatus(lastResponse, 200);
+        
+        const lastComment = await lastResponse.json();
+        expect(lastComment.id).toBe(500);
+      });
     });
 
     test('Handle special characters in payload', async ({ request }) => {
-      const specialComment = {
-        postId: 1,
-        name: 'Special Characters: !@#$%^&*()_+-=[]{}|;:,.<>?',
-        email: 'special@example.com',
-        body: 'Body with special chars: áéíóú ñ ç ß € £ ¥'
-      };
+      await test.step('Prepare special characters test data', async () => {
+        const specialCommentData = TestDataGenerators.createTestComment({
+          name: TestDataGenerators.createSpecialCharacters(),
+          body: TestDataGenerators.createSpecialCharacters()
+        });
 
-      const response = await request.post('/comments', {
-        data: specialComment
+        await test.step('Send POST request with special characters', async () => {
+          const response = await request.post('/comments', {
+            data: specialCommentData
+          });
+          
+          await test.step('Verify special characters were handled successfully', async () => {
+            await ApiAssertions.assertCreatedResource<Comment>(response, specialCommentData);
+          });
+        });
       });
-      
-      expect(response.status()).toBe(201);
-      const createdComment = await response.json();
-      
-      expect(createdComment.name).toBe(specialComment.name);
-      expect(createdComment.body).toBe(specialComment.body);
     });
 
     test('Handle empty fields', async ({ request }) => {
-      const emptyFieldComment = {
-        postId: 1,
-        name: '',
-        email: 'empty@example.com',
-        body: 'Comment with empty name'
-      };
+      await test.step('Prepare empty fields test data', async () => {
+        const emptyFieldCommentData = TestDataGenerators.createTestComment({
+          name: '',
+          body: 'Comment with empty name'
+        });
 
-      const response = await request.post('/comments', {
-        data: emptyFieldComment
+        await test.step('Send POST request with empty fields', async () => {
+          const response = await request.post('/comments', {
+            data: emptyFieldCommentData
+          });
+          
+          await test.step('Verify empty fields were handled successfully', async () => {
+            await ApiAssertions.assertCreatedResource<Comment>(response, emptyFieldCommentData);
+          });
+        });
       });
-      
-      // JSONPlaceholder accepts empty fields
-      expect(response.status()).toBe(201);
-      const createdComment = await response.json();
-      
-      expect(createdComment.name).toBe('');
-      expect(createdComment.body).toBe(emptyFieldComment.body);
     });
   });
 
   test.describe('Data-Driven Tests', () => {
     test('Create multiple comments with test data', async ({ request }) => {
-      for (const commentData of commentsData) {
-        const response = await request.post('/comments', {
-          data: commentData
-        });
-        
-        expect(response.status()).toBe(201);
-        const createdComment = await response.json();
-        
-        expect(createdComment).toHaveProperty('id');
-        expect(createdComment.postId).toBe(commentData.postId);
-        expect(createdComment.name).toBe(commentData.name);
-        expect(createdComment.email).toBe(commentData.email);
-        expect(createdComment.body).toBe(commentData.body);
-      }
+      await test.step('Load external test data from JSON file', async () => {
+        for (const commentData of commentsData) {
+          await test.step(`Create comment: "${commentData.name}"`, async () => {
+            const response = await request.post('/comments', {
+              data: commentData
+            });
+            
+            await test.step('Verify comment creation from external data', async () => {
+              await ApiAssertions.assertCreatedResource<Comment>(response, commentData);
+            });
+          });
+        }
+      });
     });
   });
 
   test.describe('Response Validation', () => {
     test('Validate response headers', async ({ request }) => {
-      const response = await request.get('/comments');
-      
-      expect(response.status()).toBe(200);
-      expect(response.headers()['content-type']).toContain('application/json');
+      await test.step('Send GET request to comments endpoint', async () => {
+        const response = await request.get('/comments');
+        
+        await test.step('Verify response status', async () => {
+          await ApiAssertions.assertStatus(response, 200);
+        });
+        
+        await test.step('Verify response headers contain correct content type', async () => {
+          await ApiAssertions.assertHeaders(response, {
+            'content-type': 'application/json'
+          });
+        });
+      });
     });
 
     test('Validate response schema', async ({ request }) => {
-      const response = await request.get('/comments/1');
-      
-      expect(response.status()).toBe(200);
-      const comment = await response.json();
-      
-      // Verify required fields exist
-      expect(comment).toHaveProperty('id');
-      expect(comment).toHaveProperty('postId');
-      expect(comment).toHaveProperty('name');
-      expect(comment).toHaveProperty('email');
-      expect(comment).toHaveProperty('body');
-      
-      // Verify field types
-      expect(typeof comment.id).toBe('number');
-      expect(typeof comment.postId).toBe('number');
-      expect(typeof comment.name).toBe('string');
-      expect(typeof comment.email).toBe('string');
-      expect(typeof comment.body).toBe('string');
-      
-      // Verify field values are not null/undefined
-      expect(comment.id).not.toBeNull();
-      expect(comment.postId).not.toBeNull();
-      expect(comment.name).not.toBeNull();
-      expect(comment.email).not.toBeNull();
-      expect(comment.body).not.toBeNull();
+      await test.step('Send GET request to specific comment', async () => {
+        const response = await request.get('/comments/1');
+        
+        await test.step('Verify basic response validation', async () => {
+          await ApiAssertions.assertStatus(response, 200);
+          await ApiAssertions.assertJsonObject(response);
+          await ApiAssertions.assertBaseResourceFields(response);
+        });
+        
+        await test.step('Verify comment-specific schema validation', async () => {
+          await ApiAssertions.assertSchema<Comment>(response, {
+            id: 'number',
+            postId: 'number',
+            name: 'string',
+            email: 'string',
+            body: 'string'
+          });
+        });
+      });
+    });
+  });
+
+  test.describe('API Helper Methods', () => {
+    test('Use API helper methods for CRUD operations', async ({ request }) => {
+      await test.step('Initialize API helpers', async () => {
+        const apiHelpers = new ApiHelpers(request);
+        
+        await test.step('Test CREATE operation using helper', async () => {
+          const createdComment = await apiHelpers.createComment(testCommentData);
+          expect(createdComment).toHaveProperty('id');
+          expect(createdComment.postId).toBe(testCommentData.postId);
+          expect(createdComment.name).toBe(testCommentData.name);
+          expect(createdComment.email).toBe(testCommentData.email);
+          expect(createdComment.body).toBe(testCommentData.body);
+        });
+
+        await test.step('Test READ operation using helper', async () => {
+          // Get existing comment using helper (since JSONPlaceholder doesn't persist created comments)
+          const retrievedComment = await apiHelpers.getCommentById(1);
+          expect(retrievedComment.id).toBe(1);
+        });
+
+        await test.step('Test UPDATE operation using helper', async () => {
+          const updatedCommentData: UpdateCommentRequest = {
+            id: 1,
+            postId: 1,
+            name: 'Updated via Helper',
+            email: 'updated@example.com',
+            body: 'Updated body via helper'
+          };
+          const updatedComment = await apiHelpers.updateComment(1, updatedCommentData);
+          expect(updatedComment.name).toBe('Updated via Helper');
+        });
+
+        await test.step('Test DELETE operation using helper', async () => {
+          await apiHelpers.deleteComment(1);
+        });
+      });
+    });
+
+    test('Use API helper for filtered queries', async ({ request }) => {
+      await test.step('Initialize API helpers and test filtered queries', async () => {
+        const apiHelpers = new ApiHelpers(request);
+        
+        await test.step('Get comments filtered by post ID', async () => {
+          const commentsByPost = await apiHelpers.getCommentsByPostId(1);
+          expect(Array.isArray(commentsByPost)).toBe(true);
+          
+          await test.step('Verify all comments belong to specified post', async () => {
+            for (const comment of commentsByPost) {
+              expect(comment.postId).toBe(1);
+            }
+          });
+        });
+      });
     });
   });
 });

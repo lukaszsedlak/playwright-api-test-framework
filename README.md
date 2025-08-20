@@ -13,11 +13,14 @@ This framework demonstrates comprehensive API testing capabilities including:
 
 ## 🚀 Features
 
-- **Comprehensive Test Coverage**: 20+ test cases covering positive, negative, and edge scenarios
+- **Comprehensive Test Coverage**: 138 test cases covering positive, negative, and edge scenarios
 - **Data-Driven Testing**: External JSON test data files for scalable testing
 - **Multiple Reporters**: HTML, JSON, and console output
 - **Error Handling**: Proper validation of HTTP status codes and error responses
 - **Schema Validation**: Response structure and data type validation
+- **TypeScript Interfaces**: Type-safe API testing with clear contracts
+- **Reusable Components**: Centralized assertions and API helper functions
+- **Test Organization**: Logical grouping with beforeAll/beforeEach hooks
 - **CI/CD Ready**: Configured for continuous integration
 
 ## 📋 Prerequisites
@@ -70,28 +73,72 @@ npm run report
 
 ```
 playwright-api-test-framework/
-├── tests/                          # Test files
-│   ├── posts.spec.ts              # Posts endpoint tests
-│   ├── comments.spec.ts           # Comments endpoint tests
-│   ├── albums.spec.ts             # Albums endpoint tests
-│   ├── photos.spec.ts             # Photos endpoint tests
-│   ├── todos.spec.ts              # Todos endpoint tests
-│   └── users.spec.ts              # Users endpoint tests
-├── test-data/                      # External test data
-│   ├── posts.json                 # Test data for posts
-│   ├── comments.json              # Test data for comments
-│   ├── albums.json                # Test data for albums
-│   ├── photos.json                # Test data for photos
-│   ├── todos.json                 # Test data for todos
-│   └── users.json                 # Test data for users
-├── docs/                          # Documentation
-│   └── test-cases.md              # Detailed test case documentation
-├── playwright-report/             # HTML test reports
-├── test-results/                  # JSON test results
-├── playwright.config.ts           # Playwright configuration
-├── package.json                   # Project dependencies and scripts
-└── README.md                      # This file
+├── types/
+│   └── api-types.ts              # TypeScript interfaces for all API types
+├── utils/
+│   ├── assertions.ts             # Reusable assertion methods
+│   └── api-helpers.ts            # API helper functions and test data generators
+├── tests/                        # Test files
+│   ├── posts.spec.ts             # Posts endpoint tests (24 tests)
+│   ├── comments.spec.ts          # Comments endpoint tests (23 tests)
+│   ├── albums.spec.ts            # Albums endpoint tests (23 tests)
+│   ├── photos.spec.ts            # Photos endpoint tests (25 tests)
+│   ├── todos.spec.ts             # Todos endpoint tests (27 tests)
+│   └── users.spec.ts             # Users endpoint tests (16 tests)
+├── test-data/                    # External test data
+│   ├── posts.json                # Test data for posts
+│   ├── comments.json             # Test data for comments
+│   ├── albums.json               # Test data for albums
+│   ├── photos.json               # Test data for photos
+│   ├── todos.json                # Test data for todos
+│   └── users.json                # Test data for users
+├── docs/                         # Documentation
+│   └── test-cases.md             # Detailed test case documentation
+├── playwright-report/            # HTML test reports
+├── test-results/                 # JSON test results
+├── playwright.config.ts          # Playwright configuration
+├── package.json                  # Project dependencies and scripts
+└── README.md                     # This file
 ```
+
+## 🏗️ Framework Architecture
+
+### TypeScript Interfaces (`types/api-types.ts`)
+The framework uses TypeScript interfaces for type-safe API testing:
+- **BaseResource** - Common interface for all resources
+- **Post, Comment, Album, Photo, Todo, User** - Resource-specific interfaces
+- **CreatePostRequest, UpdatePostRequest** - Request interfaces for each resource
+- **ApiResponse<T>** - Generic response wrapper
+- **ErrorResponse** - Error handling interface
+- **QueryParams** - Query parameter interface
+
+### Reusable Assertion Methods (`utils/assertions.ts`)
+Centralized assertion methods for consistent validation:
+- **assertStatus()** - HTTP status code validation
+- **assertJsonContentType()** - Content-Type header validation
+- **assertJsonArray() / assertJsonObject()** - Response structure validation
+- **assertBaseResourceFields()** - Common field validation
+- **assertSchema<T>()** - Type-safe schema validation
+- **assertCreatedResource<T>()** - Creation response validation
+- **assertUpdatedResource<T>()** - Update response validation
+- **assertDeleted()** - Deletion response validation
+- **assertNotFound() / assertServerError()** - Error response validation
+- **assertArrayFilteredByField()** - Filtered array validation
+
+### API Helper Functions (`utils/api-helpers.ts`)
+Encapsulated API calls and test data generation:
+- **ApiHelpers** - CRUD operations for all resources
+- **TestDataGenerators** - Test data creation utilities
+- **Helper Methods** - getAllPosts(), getPostById(), createPost(), etc.
+- **Filtered Queries** - getCommentsByPostId(), getAlbumsByUserId(), etc.
+- **Test Scenarios** - testInvalidId(), testUnsupportedMethod()
+
+### Test Organization
+Tests are organized with logical grouping and hooks:
+- **Before/After Hooks** - Shared setup and teardown
+- **Logical Grouping** - GET, POST, PUT, DELETE operations
+- **Test Categories** - Positive, Negative, Edge Cases, Data-Driven
+- **Step-by-Step Testing** - Using test.step for better visibility
 
 ## 🧪 Test Categories
 
@@ -121,6 +168,17 @@ playwright-api-test-framework/
 - 📊 Multiple test scenarios using external JSON files
 - 📊 Scalable test data management
 - 📊 6 different resource types with unique data structures
+
+### 5. Response Validation
+- 🔍 Schema validation with TypeScript interfaces
+- 🔍 Header validation (Content-Type, etc.)
+- 🔍 Data type validation
+- 🔍 Field presence validation
+
+### 6. API Helper Methods
+- 🛠️ CRUD operations testing
+- 🛠️ Filtered queries testing
+- 🛠️ Reusable test scenarios
 
 ## 📊 Test Data Structure
 
@@ -203,6 +261,26 @@ playwright-api-test-framework/
 
 ### Environment Variables
 The framework is configured to work with the JSONPlaceholder API out of the box. For different environments, you can modify the `baseURL` in `playwright.config.ts`.
+
+## 🎯 Framework Benefits
+
+### Code Quality Improvements
+- **Type Safety**: TypeScript interfaces prevent runtime errors
+- **Code Reusability**: 80% of assertions centralized in reusable methods
+- **Maintainability**: Single source of truth for common operations
+- **Consistency**: Uniform patterns across all test files
+
+### Test Organization
+- **Logical Grouping**: Tests organized by HTTP operations and categories
+- **Before/After Hooks**: Shared setup and teardown for efficient testing
+- **Step-by-Step Testing**: Clear test execution flow with test.step
+- **Modular Design**: Easy to extend with new resources
+
+### Scalability
+- **Easy Extension**: Add new resources by following established patterns
+- **Reusable Components**: API helpers and assertions work across all resources
+- **Consistent API**: Uniform interface for all test operations
+- **Independent Updates**: Modular design allows isolated changes
 
 ## 📈 Test Reports
 
