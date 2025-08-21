@@ -1,0 +1,27 @@
+[
+  {
+    "userId": 1,
+    "title": "Test Todo 1",
+    "completed": false
+  },
+  {
+    "userId": 2,
+    "title": "Test Todo 2 with Special Characters: !@#$%^&*()",
+    "completed": true
+  },
+  {
+    "userId": 3,
+    "title": "Test Todo 3 - Very Long Title That Tests How The API Handles Large Payloads And Multiple Words In A Single Title Field",
+    "completed": false
+  },
+  {
+    "userId": 1,
+    "title": "",
+    "completed": true
+  },
+  {
+    "userId": 10,
+    "title": "Test Todo 4 for Boundary Testing",
+    "completed": false
+  }
+]

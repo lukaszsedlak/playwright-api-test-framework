@@ -1,0 +1,22 @@
+[
+  {
+    "userId": 1,
+    "title": "Test Album 1"
+  },
+  {
+    "userId": 2,
+    "title": "Test Album 2 with Special Characters: !@#$%^&*()"
+  },
+  {
+    "userId": 3,
+    "title": "Test Album 3 - Very Long Title That Tests How The API Handles Large Payloads And Multiple Words In A Single Title Field"
+  },
+  {
+    "userId": 1,
+    "title": ""
+  },
+  {
+    "userId": 10,
+    "title": "Test Album 4 for Boundary Testing"
+  }
+]
