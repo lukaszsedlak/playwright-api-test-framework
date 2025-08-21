@@ -1,26 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../utils/test-fixtures';
 import { ApiAssertions } from '../utils/assertions';
 import { ApiHelpers, TestDataGenerators } from '../utils/api-helpers';
 import { Album, CreateAlbumRequest, UpdateAlbumRequest } from '../types/api-types';
 import albumsData from '../test-data/albums.json';
 
 test.describe('Albums API Tests', () => {
-  let sampleAlbum: Album;
-  let testAlbumData: CreateAlbumRequest;
-
-  test.beforeAll(async ({ request }) => {
-    // Fetch a sample album for reuse in tests
-    const response = await request.get('/albums/1');
-    sampleAlbum = await response.json();
-    
-    // Initialize test data
-    testAlbumData = TestDataGenerators.createTestAlbum();
-  });
-
-  test.beforeEach(async () => {
-    // Reset test data for each test
-    testAlbumData = TestDataGenerators.createTestAlbum();
-  });
 
   test.describe('GET Operations', () => {
     test('Get all albums successfully', async ({ request }) => {
@@ -88,7 +72,7 @@ test.describe('Albums API Tests', () => {
   });
 
   test.describe('POST Operations', () => {
-    test('Create new album successfully', async ({ request }) => {
+    test('Create new album successfully', async ({ request, testAlbumData }) => {
       await test.step('Send POST request to create new album', async () => {
         const response = await request.post('/albums', {
           data: testAlbumData
@@ -404,7 +388,7 @@ test.describe('Albums API Tests', () => {
   });
 
   test.describe('API Helper Methods', () => {
-    test('Use API helper methods for CRUD operations', async ({ request }) => {
+    test('Use API helper methods for CRUD operations', async ({ request, testAlbumData }) => {
       await test.step('Initialize API helpers', async () => {
         const apiHelpers = new ApiHelpers(request);
         

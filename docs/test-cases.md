@@ -351,6 +351,92 @@ Tests that validate boundary conditions and unusual scenarios.
   - Status code: 200
   - Response contains user with id=1
 
+### TC017: Create New User (Positive)
+- **Test Case Name**: Create New User Successfully
+- **Description**: Verify that POST /users creates new user
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare user data with name, username, email, phone, website
+  2. Send POST request to /users with data
+  3. Verify response status code is 201
+  4. Verify response contains created user with id
+- **Expected Result**:
+  - Status code: 201
+  - Response contains created user with generated id
+  - User data matches sent data
+
+### TC018: Create User with Large Payload (Positive)
+- **Test Case Name**: Create User with Large Payload Successfully
+- **Description**: Verify that API handles large payloads for user creation
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare user data with very long name and email fields
+  2. Send POST request to /users with large payload
+  3. Verify response status code is 201
+- **Expected Result**:
+  - Status code: 201
+  - Response contains created user
+
+### TC019: Create User with Special Characters (Positive)
+- **Test Case Name**: Create User with Special Characters Successfully
+- **Description**: Verify that API handles special characters in user data
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare user data with special characters in name and username
+  2. Send POST request to /users with special characters
+  3. Verify response status code is 201
+- **Expected Result**:
+  - Status code: 201
+  - Response contains created user with special characters preserved
+
+### TC020: Create User with Empty Fields (Positive)
+- **Test Case Name**: Create User with Empty Fields Successfully
+- **Description**: Verify that API handles empty fields in user data
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare user data with empty name and website fields
+  2. Send POST request to /users with empty fields
+  3. Verify response behavior
+- **Expected Result**:
+  - API accepts empty fields (JSONPlaceholder behavior)
+  - Response contains created user
+
+### TC021: Update User (Positive)
+- **Test Case Name**: Update User Successfully
+- **Description**: Verify that PUT /users/{id} updates existing user
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare updated user data
+  2. Send PUT request to /users/1 with updated data
+  3. Verify response status code is 200
+  4. Verify response contains updated user
+- **Expected Result**:
+  - Status code: 200
+  - Response contains updated user
+  - User data reflects changes
+
+### TC022: Update User with Large Payload (Positive)
+- **Test Case Name**: Update User with Large Payload Successfully
+- **Description**: Verify that API handles large payloads for user updates
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Prepare user data with very long name and email fields
+  2. Send PUT request to /users/1 with large payload
+  3. Verify response status code is 200
+- **Expected Result**:
+  - Status code: 200
+  - Response contains updated user
+
+### TC023: Delete User (Positive)
+- **Test Case Name**: Delete User Successfully
+- **Description**: Verify that DELETE /users/{id} deletes user
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Send DELETE request to /users/1
+  2. Verify response status code is 200
+- **Expected Result**:
+  - Status code: 200
+
 ---
 
 ## Negative Scenarios (Common across all endpoints)
@@ -462,7 +548,7 @@ Tests that validate boundary conditions and unusual scenarios.
 
 ## Data-Driven Tests
 
-### TC017: Data-Driven Post Creation
+### TC024: Data-Driven Post Creation
 - **Test Case Name**: Create Multiple Posts with Test Data
 - **Description**: Verify that multiple posts can be created using external test data
 - **Precondition**: API is accessible, test data available
@@ -474,7 +560,7 @@ Tests that validate boundary conditions and unusual scenarios.
   - All requests return status code 201
   - Each response contains created post
 
-### TC018: Data-Driven User Creation
+### TC025: Data-Driven User Creation
 - **Test Case Name**: Create Multiple Users with Test Data
 - **Description**: Verify that multiple users can be created using external test data
 - **Precondition**: API is accessible, test data available
@@ -486,7 +572,7 @@ Tests that validate boundary conditions and unusual scenarios.
   - All requests return status code 201
   - Each response contains created user
 
-### TC039: Data-Driven Comment Creation
+### TC026: Data-Driven Comment Creation
 - **Test Case Name**: Create Multiple Comments with Test Data
 - **Description**: Verify that multiple comments can be created using external test data
 - **Precondition**: API is accessible, test data available
@@ -498,7 +584,7 @@ Tests that validate boundary conditions and unusual scenarios.
   - All requests return status code 201
   - Each response contains created comment
 
-### TC040: Data-Driven Album Creation
+### TC027: Data-Driven Album Creation
 - **Test Case Name**: Create Multiple Albums with Test Data
 - **Description**: Verify that multiple albums can be created using external test data
 - **Precondition**: API is accessible, test data available
@@ -510,7 +596,7 @@ Tests that validate boundary conditions and unusual scenarios.
   - All requests return status code 201
   - Each response contains created album
 
-### TC041: Data-Driven Photo Creation
+### TC028: Data-Driven Photo Creation
 - **Test Case Name**: Create Multiple Photos with Test Data
 - **Description**: Verify that multiple photos can be created using external test data
 - **Precondition**: API is accessible, test data available
@@ -522,7 +608,7 @@ Tests that validate boundary conditions and unusual scenarios.
   - All requests return status code 201
   - Each response contains created photo
 
-### TC042: Data-Driven Todo Creation
+### TC029: Data-Driven Todo Creation
 - **Test Case Name**: Create Multiple Todos with Test Data
 - **Description**: Verify that multiple todos can be created using external test data
 - **Precondition**: API is accessible, test data available
@@ -538,7 +624,7 @@ Tests that validate boundary conditions and unusual scenarios.
 
 ## Response Validation Tests
 
-### TC019: Response Headers Validation
+### TC030: Response Headers Validation
 - **Test Case Name**: Validate Response Headers
 - **Description**: Verify that API responses include correct headers
 - **Precondition**: API is accessible
@@ -550,7 +636,7 @@ Tests that validate boundary conditions and unusual scenarios.
   - Content-Type: application/json
   - Other headers as expected
 
-### TC020: Response Schema Validation
+### TC031: Response Schema Validation
 - **Test Case Name**: Validate Response Schema
 - **Description**: Verify that API responses match expected schema
 - **Precondition**: API is accessible
@@ -566,7 +652,7 @@ Tests that validate boundary conditions and unusual scenarios.
 
 ## Resource-Specific Edge Cases
 
-### TC043: Photo URL Validation (Photos Endpoint)
+### TC032: Photo URL Validation (Photos Endpoint)
 - **Test Case Name**: Handle Invalid URL Formats
 - **Description**: Verify that API handles invalid URL formats in photo endpoints
 - **Precondition**: API is accessible
@@ -578,7 +664,7 @@ Tests that validate boundary conditions and unusual scenarios.
   - API accepts invalid URLs (JSONPlaceholder behavior)
   - Response contains created photo with invalid URLs
 
-### TC044: Todo Boolean Validation (Todos Endpoint)
+### TC033: Todo Boolean Validation (Todos Endpoint)
 - **Test Case Name**: Handle Boolean Edge Cases
 - **Description**: Verify that API handles boolean completed field correctly
 - **Precondition**: API is accessible
@@ -592,13 +678,170 @@ Tests that validate boundary conditions and unusual scenarios.
 
 ---
 
+## API Helper Method Tests
+
+### TC034: API Helper CRUD Operations (Posts)
+- **Test Case Name**: Use API Helper Methods for CRUD Operations
+- **Description**: Verify that API helper methods work correctly for posts CRUD operations
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Test CREATE operation using helper
+  3. Test READ operation using helper
+  4. Test UPDATE operation using helper
+  5. Test DELETE operation using helper
+- **Expected Result**:
+  - All CRUD operations work correctly
+  - Helper methods return expected data
+
+### TC035: API Helper Filtered Queries (Posts)
+- **Test Case Name**: Use API Helper for Filtered Queries
+- **Description**: Verify that API helper methods work correctly for filtered queries
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Get posts filtered by user ID using helper
+  3. Verify all posts belong to specified user
+- **Expected Result**:
+  - Filtered queries work correctly
+  - All returned posts belong to specified user
+
+### TC036: API Helper CRUD Operations (Comments)
+- **Test Case Name**: Use API Helper Methods for CRUD Operations
+- **Description**: Verify that API helper methods work correctly for comments CRUD operations
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Test CREATE operation using helper
+  3. Test READ operation using helper
+  4. Test UPDATE operation using helper
+  5. Test DELETE operation using helper
+- **Expected Result**:
+  - All CRUD operations work correctly
+  - Helper methods return expected data
+
+### TC037: API Helper Filtered Queries (Comments)
+- **Test Case Name**: Use API Helper for Filtered Queries
+- **Description**: Verify that API helper methods work correctly for filtered queries
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Get comments filtered by post ID using helper
+  3. Verify all comments belong to specified post
+- **Expected Result**:
+  - Filtered queries work correctly
+  - All returned comments belong to specified post
+
+### TC038: API Helper CRUD Operations (Albums)
+- **Test Case Name**: Use API Helper Methods for CRUD Operations
+- **Description**: Verify that API helper methods work correctly for albums CRUD operations
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Test CREATE operation using helper
+  3. Test READ operation using helper
+  4. Test UPDATE operation using helper
+  5. Test DELETE operation using helper
+- **Expected Result**:
+  - All CRUD operations work correctly
+  - Helper methods return expected data
+
+### TC039: API Helper Filtered Queries (Albums)
+- **Test Case Name**: Use API Helper for Filtered Queries
+- **Description**: Verify that API helper methods work correctly for filtered queries
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Get albums filtered by user ID using helper
+  3. Verify all albums belong to specified user
+- **Expected Result**:
+  - Filtered queries work correctly
+  - All returned albums belong to specified user
+
+### TC040: API Helper CRUD Operations (Photos)
+- **Test Case Name**: Use API Helper Methods for CRUD Operations
+- **Description**: Verify that API helper methods work correctly for photos CRUD operations
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Test CREATE operation using helper
+  3. Test READ operation using helper
+  4. Test UPDATE operation using helper
+  5. Test DELETE operation using helper
+- **Expected Result**:
+  - All CRUD operations work correctly
+  - Helper methods return expected data
+
+### TC041: API Helper Filtered Queries (Photos)
+- **Test Case Name**: Use API Helper for Filtered Queries
+- **Description**: Verify that API helper methods work correctly for filtered queries
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Get photos filtered by album ID using helper
+  3. Verify all photos belong to specified album
+- **Expected Result**:
+  - Filtered queries work correctly
+  - All returned photos belong to specified album
+
+### TC042: API Helper CRUD Operations (Todos)
+- **Test Case Name**: Use API Helper Methods for CRUD Operations
+- **Description**: Verify that API helper methods work correctly for todos CRUD operations
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Test CREATE operation using helper
+  3. Test READ operation using helper
+  4. Test UPDATE operation using helper
+  5. Test DELETE operation using helper
+- **Expected Result**:
+  - All CRUD operations work correctly
+  - Helper methods return expected data
+
+### TC043: API Helper Filtered Queries (Todos)
+- **Test Case Name**: Use API Helper for Filtered Queries
+- **Description**: Verify that API helper methods work correctly for filtered queries
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Get todos filtered by user ID and completion status using helper
+  3. Verify all todos match specified criteria
+- **Expected Result**:
+  - Filtered queries work correctly
+  - All returned todos match specified criteria
+
+### TC044: API Helper CRUD Operations (Users)
+- **Test Case Name**: Use API Helper Methods for CRUD Operations
+- **Description**: Verify that API helper methods work correctly for users CRUD operations
+- **Precondition**: API is accessible
+- **Steps**:
+  1. Initialize API helpers
+  2. Test CREATE operation using helper
+  3. Test READ operation using helper
+  4. Test UPDATE operation using helper
+  5. Test DELETE operation using helper
+- **Expected Result**:
+  - All CRUD operations work correctly
+  - Helper methods return expected data
+
+---
+
 ## Test Summary
 
-**Total Test Cases**: 44  
+**Total Test Cases**: 138  
 **Resource Endpoints Covered**: 6 (Posts, Comments, Albums, Photos, Todos, Users)  
-**Test Categories**: Positive, Negative, Edge Cases, Data-Driven, Response Validation  
+**Test Categories**: Positive, Negative, Edge Cases, Data-Driven, Response Validation, API Helper Methods  
 **Data-Driven Tests**: 6 (one per resource)  
 **Query Parameter Tests**: 8 (filtering by various criteria)  
 **Schema Validation Tests**: 6 (one per resource)  
 **Error Handling Tests**: 5 (common across all resources)  
-**Edge Case Tests**: 6 (common across all resources) + 2 (resource-specific)
+**Edge Case Tests**: 6 (common across all resources) + 2 (resource-specific)  
+**API Helper Method Tests**: 12 (CRUD operations + filtered queries for each resource)
+
+### Test Distribution by Resource:
+- **Posts**: 24 tests
+- **Comments**: 23 tests  
+- **Albums**: 23 tests
+- **Photos**: 25 tests
+- **Todos**: 27 tests
+- **Users**: 16 tests

@@ -1,26 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../utils/test-fixtures';
 import { ApiAssertions } from '../utils/assertions';
 import { ApiHelpers, TestDataGenerators } from '../utils/api-helpers';
 import { Photo, CreatePhotoRequest, UpdatePhotoRequest } from '../types/api-types';
 import photosData from '../test-data/photos.json';
 
 test.describe('Photos API Tests', () => {
-  let samplePhoto: Photo;
-  let testPhotoData: CreatePhotoRequest;
-
-  test.beforeAll(async ({ request }) => {
-    // Fetch a sample photo for reuse in tests
-    const response = await request.get('/photos/1');
-    samplePhoto = await response.json();
-    
-    // Initialize test data
-    testPhotoData = TestDataGenerators.createTestPhoto();
-  });
-
-  test.beforeEach(async () => {
-    // Reset test data for each test
-    testPhotoData = TestDataGenerators.createTestPhoto();
-  });
 
   test.describe('GET Operations', () => {
     test('Get all photos successfully', async ({ request }) => {
@@ -92,7 +76,7 @@ test.describe('Photos API Tests', () => {
   });
 
   test.describe('POST Operations', () => {
-    test('Create new photo successfully', async ({ request }) => {
+    test('Create new photo successfully', async ({ request, testPhotoData }) => {
       await test.step('Send POST request to create new photo', async () => {
         const response = await request.post('/photos', {
           data: testPhotoData
@@ -458,7 +442,7 @@ test.describe('Photos API Tests', () => {
   });
 
   test.describe('API Helper Methods', () => {
-    test('Use API helper methods for CRUD operations', async ({ request }) => {
+    test('Use API helper methods for CRUD operations', async ({ request, testPhotoData }) => {
       await test.step('Initialize API helpers', async () => {
         const apiHelpers = new ApiHelpers(request);
         

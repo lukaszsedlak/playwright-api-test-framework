@@ -1,26 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../utils/test-fixtures';
 import { ApiAssertions } from '../utils/assertions';
 import { ApiHelpers, TestDataGenerators } from '../utils/api-helpers';
 import { Todo, CreateTodoRequest, UpdateTodoRequest } from '../types/api-types';
 import todosData from '../test-data/todos.json';
 
 test.describe('Todos API Tests', () => {
-  let sampleTodo: Todo;
-  let testTodoData: CreateTodoRequest;
-
-  test.beforeAll(async ({ request }) => {
-    // Fetch a sample todo for reuse in tests
-    const response = await request.get('/todos/1');
-    sampleTodo = await response.json();
-    
-    // Initialize test data
-    testTodoData = TestDataGenerators.createTestTodo();
-  });
-
-  test.beforeEach(async () => {
-    // Reset test data for each test
-    testTodoData = TestDataGenerators.createTestTodo();
-  });
 
   test.describe('GET Operations', () => {
     test('Get all todos successfully', async ({ request }) => {
@@ -122,7 +106,7 @@ test.describe('Todos API Tests', () => {
   });
 
   test.describe('POST Operations', () => {
-    test('Create new todo successfully', async ({ request }) => {
+    test('Create new todo successfully', async ({ request, testTodoData }) => {
       await test.step('Send POST request to create new todo', async () => {
         const response = await request.post('/todos', {
           data: testTodoData
@@ -502,7 +486,7 @@ test.describe('Todos API Tests', () => {
   });
 
   test.describe('API Helper Methods', () => {
-    test('Use API helper methods for CRUD operations', async ({ request }) => {
+    test('Use API helper methods for CRUD operations', async ({ request, testTodoData }) => {
       await test.step('Initialize API helpers', async () => {
         const apiHelpers = new ApiHelpers(request);
         

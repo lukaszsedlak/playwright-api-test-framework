@@ -1,26 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../utils/test-fixtures';
 import { ApiAssertions } from '../utils/assertions';
 import { ApiHelpers, TestDataGenerators } from '../utils/api-helpers';
 import { Comment, CreateCommentRequest, UpdateCommentRequest } from '../types/api-types';
 import commentsData from '../test-data/comments.json';
 
 test.describe('Comments API Tests', () => {
-  let sampleComment: Comment;
-  let testCommentData: CreateCommentRequest;
-
-  test.beforeAll(async ({ request }) => {
-    // Fetch a sample comment for reuse in tests
-    const response = await request.get('/comments/1');
-    sampleComment = await response.json();
-    
-    // Initialize test data
-    testCommentData = TestDataGenerators.createTestComment();
-  });
-
-  test.beforeEach(async () => {
-    // Reset test data for each test
-    testCommentData = TestDataGenerators.createTestComment();
-  });
 
   test.describe('GET Operations', () => {
     test('Get all comments successfully', async ({ request }) => {
@@ -92,7 +76,7 @@ test.describe('Comments API Tests', () => {
   });
 
   test.describe('POST Operations', () => {
-    test('Create new comment successfully', async ({ request }) => {
+    test('Create new comment successfully', async ({ request, testCommentData }) => {
       await test.step('Send POST request to create new comment', async () => {
         const response = await request.post('/comments', {
           data: testCommentData
@@ -424,7 +408,7 @@ test.describe('Comments API Tests', () => {
   });
 
   test.describe('API Helper Methods', () => {
-    test('Use API helper methods for CRUD operations', async ({ request }) => {
+    test('Use API helper methods for CRUD operations', async ({ request, testCommentData }) => {
       await test.step('Initialize API helpers', async () => {
         const apiHelpers = new ApiHelpers(request);
         

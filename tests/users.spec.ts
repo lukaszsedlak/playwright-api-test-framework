@@ -1,26 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../utils/test-fixtures';
 import { ApiAssertions } from '../utils/assertions';
 import { ApiHelpers, TestDataGenerators } from '../utils/api-helpers';
 import { User, CreateUserRequest, UpdateUserRequest } from '../types/api-types';
 import usersData from '../test-data/users.json';
 
 test.describe('Users API Tests', () => {
-  let sampleUser: User;
-  let testUserData: CreateUserRequest;
-
-  test.beforeAll(async ({ request }) => {
-    // Fetch a sample user for reuse in tests
-    const response = await request.get('/users/1');
-    sampleUser = await response.json();
-    
-    // Initialize test data
-    testUserData = TestDataGenerators.createTestUser();
-  });
-
-  test.beforeEach(async () => {
-    // Reset test data for each test
-    testUserData = TestDataGenerators.createTestUser();
-  });
 
   test.describe('GET Operations', () => {
     test('TC015: Get all users successfully', async ({ request }) => {
@@ -78,7 +62,7 @@ test.describe('Users API Tests', () => {
   });
 
   test.describe('POST Operations', () => {
-    test('Create new user successfully', async ({ request }) => {
+    test('Create new user successfully', async ({ request, testUserData }) => {
       await test.step('Send POST request to create new user', async () => {
         const response = await request.post('/users', {
           data: testUserData
@@ -313,7 +297,7 @@ test.describe('Users API Tests', () => {
   });
 
   test.describe('API Helper Methods', () => {
-    test('Use API helper methods for CRUD operations', async ({ request }) => {
+    test('Use API helper methods for CRUD operations', async ({ request, testUserData }) => {
       await test.step('Initialize API helpers', async () => {
         const apiHelpers = new ApiHelpers(request);
         

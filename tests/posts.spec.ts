@@ -1,28 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../utils/test-fixtures';
 import { ApiAssertions } from '../utils/assertions';
 import { ApiHelpers, TestDataGenerators } from '../utils/api-helpers';
 import { Post, CreatePostRequest, UpdatePostRequest } from '../types/api-types';
 import postsData from '../test-data/posts.json';
 
-  test.describe('Posts API Tests', () => {
-    let samplePost: Post;
-    let testPostData: CreatePostRequest;
-
-    // Before all tests - setup shared data
-    test.beforeAll(async ({ request }) => {
-      // Fetch a sample post for reuse across tests
-      const response = await request.get('/posts/1');
-      samplePost = await response.json();
-      
-      // Create test data for reuse
-      testPostData = TestDataGenerators.createTestPost();
-    });
-
-    // Before each test - setup test-specific data
-    test.beforeEach(async () => {
-      // Reset test data for each test
-      testPostData = TestDataGenerators.createTestPost();
-    });
+test.describe('Posts API Tests', () => {
 
   test.describe('GET Operations', () => {
     test('TC001: Get all posts successfully', async ({ request }) => {
@@ -92,7 +74,7 @@ import postsData from '../test-data/posts.json';
   });
 
   test.describe('POST Operations', () => {
-    test('TC003: Create new post successfully', async ({ request }) => {
+    test('TC003: Create new post successfully', async ({ request, testPostData }) => {
       await test.step('Send POST request to create new post', async () => {
         const response = await request.post('/posts', {
           data: testPostData
@@ -433,7 +415,7 @@ import postsData from '../test-data/posts.json';
   });
 
   test.describe('API Helper Methods', () => {
-    test('Use API helper methods for CRUD operations', async ({ request }) => {
+    test('Use API helper methods for CRUD operations', async ({ request, testPostData }) => {
       await test.step('Initialize API helpers', async () => {
         const apiHelpers = new ApiHelpers(request);
         
